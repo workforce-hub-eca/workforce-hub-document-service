@@ -1,4 +1,4 @@
-package com.workforcehub.Document.Service;
+package com.workforcehub.documentservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
