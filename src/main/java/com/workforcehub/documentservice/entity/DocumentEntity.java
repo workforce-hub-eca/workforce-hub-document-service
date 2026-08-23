@@ -21,4 +21,9 @@ public class DocumentEntity {
     private String fileName;
     private String fileUrl;
     private LocalDateTime uploadedAt;
+    
+    private String storageObjectName;
+    private String originalFileName;
+    private String contentType;
+    private Long size;
 }
