@@ -12,6 +12,13 @@ if [ -z "${DOCUMENT_MONGODB_SECRET_ID:-}" ]; then
     exit 1
 fi
 
+for var in DOCUMENT_MONGODB_HOST DOCUMENT_MONGODB_PORT DOCUMENT_MONGODB_DATABASE DOCUMENT_MONGODB_USERNAME DOCUMENT_MONGODB_AUTH_DATABASE; do
+    if [ -z "${!var:-}" ]; then
+        echo "ERROR: $var is required"
+        exit 1
+    fi
+done
+
 echo "Waiting for Config Server to be healthy..."
 max_retries=30
 retry_count=0
@@ -38,8 +45,15 @@ if [ -z "$TEMP_PASS" ]; then
     exit 1
 fi
 
+export SPRING_MONGODB_HOST="$DOCUMENT_MONGODB_HOST"
+export SPRING_MONGODB_PORT="$DOCUMENT_MONGODB_PORT"
+export SPRING_MONGODB_DATABASE="$DOCUMENT_MONGODB_DATABASE"
+export SPRING_MONGODB_USERNAME="$DOCUMENT_MONGODB_USERNAME"
+export SPRING_MONGODB_AUTHENTICATIONDATABASE="$DOCUMENT_MONGODB_AUTH_DATABASE"
+
 export DOCUMENT_MONGODB_PASSWORD="$TEMP_PASS"
-TEMP_PASS=""
+export SPRING_MONGODB_PASSWORD="$TEMP_PASS"
+unset TEMP_PASS
 
 echo "Starting Document Service..."
 exec /usr/bin/java -jar /opt/workforce-hub/apps/document-service-0.0.1-SNAPSHOT.jar
